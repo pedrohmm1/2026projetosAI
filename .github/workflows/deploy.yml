@@ -56,11 +56,14 @@ jobs:
             docker rm -f mongo-pagamentos || true
             docker run -d --name mongo-pagamentos --network=rede mongo:latest
 
+            docker stop app_users || true
+            docker rm -f app_users || true
+
             docker stop payment-api || true
             docker rm -f payment-api || true
             docker pull ${{ secrets.DOCKER_USER }}/payment-api:${{ github.sha }}
             docker run -d \
-              -p 5004:5000 \
+              -p 80:5000 \
               -e MONGO_URL=${{ secrets.MONGO_URL }} \
               -e USER_API_URL=${{ secrets.USER_API_URL }} \
               --network=rede \
